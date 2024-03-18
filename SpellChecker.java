@@ -5,11 +5,10 @@ public class SpellChecker {
 		String word = args[0];
 		int threshold = Integer.parseInt(args[1]);
 		String[] dictionary = readDictionary("dictionary.txt");
-		String correction = spellChecker(word, threshold, dictionary);
+		String correction = spellChecker(toLowerCase(word), threshold, dictionary);
 		System.out.println(correction);
 
 		//System.out.println(levenshtein("love", "ov0dsej"));
-
 	}
 
 	public static String tail(String str) {
@@ -61,7 +60,20 @@ public class SpellChecker {
 	}
 
 	public static String spellChecker(String word, int threshold, String[] dictionary) {
-		return "dsjc";
+		String correctWord;
+		if(!existInDictionary(word, dictionary)){
+			for(int i = 0; i < 3000; i++){
+				if(levenshtein(word, dictionary[i]) <= threshold){
+					correctWord = dictionary[i];
+					return correctWord;
+				}	
+			}
+		}
+		else{
+			return word;
+		}
+
+		return word;
 	}
 
 	//used to process in lev method to make sure case sensitive
@@ -93,5 +105,75 @@ public class SpellChecker {
 		}
 		return min;
 	}
+	//used to check if the given word might be correct before substituting it
+	private static boolean existInDictionary(String word, String dictionary[]) {
+		//boolean exists = false;
+		//used to find index of the words
+		char firstCharGivenWord = word.charAt(0);
+
+		//find start index
+		int startIndex = 0;
+		for(int i = 0; i < 3000; i++){
+			//if the first char is the same
+			if(firstCharGivenWord == dictionary[i].charAt(0)){
+				break;
+			}
+			//if not we continue
+			else{
+				startIndex++;
+			}
+		}
+
+		//find end index of relevant words
+		int endIndex = startIndex;
+		for(int i = startIndex; i < 3000; i++){
+			if(firstCharGivenWord != dictionary[i].charAt(0)){
+				break;
+			}
+			//if not we continue
+			else{
+				endIndex++;
+			}
+		}
+
+	//make new array of relevant words
+	String[] newArr = new String[endIndex - startIndex];
+	int j = 0;
+	for(int i = startIndex; i < endIndex; i++){
+		newArr[j] = dictionary[i];
+		//System.out.println(newArr[j]);
+		j++;
+	}
+
+	//now loop through new arr
+	for(int i = 0; i < newArr.length; i++){
+		if(word.length() == newArr[i].length()){
+			//uses recursive private functioni added to check
+			if(recursiveChecker(word, newArr[i])){
+				//System.out.println("TRUE");
+				return true;
+			}
+		}
+	}
+
+		//System.out.println("false");
+		return false;
+	}
+		//used to check if word already exists
+		//checks if two strings are the same recursively
+		private static boolean recursiveChecker(String s1, String s2){
+			//base case
+			if(s1.length() == 1 && s1.charAt(0) == s2.charAt(0)){
+				return true;
+			}
+			//if the first chars are same calls on itslef
+			else if(s1.charAt(0) == s2.charAt(0)){
+				return recursiveChecker(s1.substring(1), s2.substring(1));
+			}
+			//if chars arent the same false
+			else{
+				return false;
+			}
+		}
 
 }

@@ -41,7 +41,6 @@ public class HashTagTokenizer {
 				startIndex++;
 			}
 		}
-
 		//find end index of relevant words
 		int endIndex = startIndex;
 		for(int i = startIndex; i < 3000; i++){
@@ -53,7 +52,6 @@ public class HashTagTokenizer {
 				endIndex++;
 			}
 		}
-
 	//make new array of relevant words
 	String[] newArr = new String[endIndex - startIndex];
 	int j = 0;
@@ -62,7 +60,6 @@ public class HashTagTokenizer {
 		//System.out.println(newArr[j]);
 		j++;
 	}
-
 	//now loop through new arr
 	for(int i = 0; i < newArr.length; i++){
 		if(word.length() == newArr[i].length()){
@@ -73,7 +70,6 @@ public class HashTagTokenizer {
 			}
 		}
 	}
-
 		//System.out.println("false");
 		return false;
 	}
